@@ -18,10 +18,10 @@ Metadata:
 Parameters:
   Name:
     Type: String
-    Default: "api"
+    Default: "cfn-agw-inamura"
   FunctionName:
     Type: String
-    Default: !ImportValue cfn-lmd-inamura-name
+    Default: "cfn-lmd-inamura"
 # ------------------------------------------------------------#
 #  Resources
 # ------------------------------------------------------------#
