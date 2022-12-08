@@ -11,7 +11,7 @@ Metadata:
           default: "APIGateway Configuration"
         Parameters:
         - Name
-        - PathPart
+        - FunctionName
 # ------------------------------------------------------------#
 #  InputParameters
 # ------------------------------------------------------------#
@@ -19,9 +19,9 @@ Parameters:
   Name:
     Type: String
     Default: "api"
-  PathPart:
+  FunctionName:
     Type: String
-    Default: "cfn-api-inamura"
+    Default: !ImportValue cfn-lmd-inamura-name
 # ------------------------------------------------------------#
 #  Resources
 # ------------------------------------------------------------#
@@ -39,18 +39,17 @@ Resources:
     Properties:
       RestApiId: !Ref Api
       ParentId: !GetAtt Api.RootResourceId
-      PathPart: !Ref PathPart
-    DependsOn:
-      - Api 
- 
+      PathPart: !Ref FunctionName
+    DependsOn: Api
+
   LambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
-      FunctionName: !Sub "${FunctionName}"
+      FunctionName: !Ref FunctionName
       Action: "lambda:InvokeFunction"
       Principal: "apigateway.amazonaws.com"
     DependsOn: Resource 
- 
+
   ResourceMethod:
     Type: "AWS::ApiGateway::Method"
     Properties:
@@ -60,7 +59,7 @@ Resources:
       HttpMethod: "GET"
       Integration:
         Type: "AWS_PROXY"
-        IntegrationHttpMethod: "POST"
+        IntegrationHttpMethod: "Get"
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${FunctionName}/invocations"
     DependsOn: LambdaPermission
  
