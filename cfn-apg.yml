@@ -10,13 +10,18 @@ Metadata:
       - Label:
           default: "APIGateway Configuration"
         Parameters:
+        - Name
+        - PathPart
 # ------------------------------------------------------------#
 #  InputParameters
 # ------------------------------------------------------------#
 Parameters:
-  FunctionName:
+  Name:
     Type: String
-    Description: "get_amazonconnect_users"
+    Default: "api"
+  PathPart:
+    Type: String
+    Default: "cfn-api-inamura"
 # ------------------------------------------------------------#
 #  Resources
 # ------------------------------------------------------------#
@@ -27,14 +32,14 @@ Resources:
   Api:
     Type: "AWS::ApiGateway::RestApi"
     Properties:
-      Name: "api_cfn_test"
+      Name: !Ref Name
  
   Resource:
     Type: "AWS::ApiGateway::Resource"
     Properties:
       RestApiId: !Ref Api
       ParentId: !GetAtt Api.RootResourceId
-      PathPart: !Sub "${FunctionName}"
+      PathPart: !Ref PathPart
     DependsOn:
       - Api 
  

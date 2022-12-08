@@ -101,3 +101,7 @@ Outputs:
     Value: !GetAtt Lambda.Arn
     Export:
       Name: !Sub "${FunctionName}-arn"
+  LambdaName:
+    Value: !GetAtt Lambda
+    Export:
+      Name: !Sub "${FunctionName}-name"
