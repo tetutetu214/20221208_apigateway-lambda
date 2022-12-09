@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  SystemName:
+    Type: String
+    Default: example
+  BucketName:
+    Type: String
+    Default: www.example.xxx
+  HostedZone:
+    Type: String
+    Default: ZXXXXXXXXXXXXXXXXXXXX
+
+Resources:
+  ACM:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref BucketName
+      DomainValidationOptions:
+        - DomainName: !Ref BucketName
+          HostedZoneId: !Ref HostedZone
+      ValidationMethod: DNS
+      Tags:
+      -
+        Key: Name
+        Value: !Sub ${SystemName}-${BucketName}-acm
+
+Outputs:
+  ACMCertificateARN:
+    Value: !Ref ACM
+    Export:
+      Name: !Sub ${SystemName}-CertificateARN

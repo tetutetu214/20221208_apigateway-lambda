@@ -1,0 +1,63 @@
+
+AWSTemplateFormatVersion: '2010-09-09'
+Description:
+  CloudFront Create
+# ------------------------------------------------------------#
+#  Metadata
+# ------------------------------------------------------------#
+Metadata:
+  "AWS::CloudFormation::Interface":
+    ParameterGroups:
+      - Label:
+          default: "Lambda Configuration"
+        Parameters:
+        - FunctionName
+# ------------------------------------------------------------#
+#  InputParameters
+# ------------------------------------------------------------#
+Parameters:
+  FunctionName:
+    Type: String
+    Default: "cfn-lmd-inamura"
+# ------------------------------------------------------------#
+#  Resources
+# ------------------------------------------------------------#
+Resources:
+# ------------------------------------------------------------#
+#  CloudFront
+# ------------------------------------------------------------#
+  CloudFrontDistribution:
+      Type: "AWS::CloudFront::Distribution"
+      Properties:
+        DistributionConfig:
+          PriceClass: PriceClass_All
+          Aliases:
+          - !Ref WebsiteDomainName
+          Origins:
+          - CustomOriginConfig:
+              OriginProtocolPolicy: http-only
+            DomainName: !Sub "${WebsiteDomainName}.s3-website-${AWS::Region}.amazonaws.com"
+            Id: !Sub "S3-Website-${WebsiteDomainName}.s3-website-ap-northeast-1.amazonaws.com"
+          DefaultCacheBehavior:
+            TargetOriginId: !Sub "S3-Website-${WebsiteDomainName}.s3-website-ap-northeast-1.amazonaws.com"
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods:
+            - GET
+            - HEAD
+            CachedMethods:
+            - GET
+            - HEAD
+            DefaultTTL: 3600
+            MaxTTL: 86400
+            MinTTL: 60
+            Compress: true
+            ForwardedValues:
+              Cookies:
+                Forward: none
+              QueryString: false
+          ViewerCertificate:
+            SslSupportMethod: sni-only
+            MinimumProtocolVersion: TLSv1.1_2016
+            AcmCertificateArn: !Sub "arn:aws:acm:us-east-1:${AWS::AccountId}:certificate/${CFSSLCertificateId}"
+          HttpVersion: http2
+          Enabled: true
