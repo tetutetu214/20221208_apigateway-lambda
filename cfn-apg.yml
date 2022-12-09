@@ -12,6 +12,7 @@ Metadata:
         Parameters:
         - Name
         - FunctionName
+        - StageName
 # ------------------------------------------------------------#
 #  InputParameters
 # ------------------------------------------------------------#
@@ -22,6 +23,9 @@ Parameters:
   FunctionName:
     Type: String
     Default: "cfn-lmd-inamura"
+  StageName:
+    Type: String
+    Default: "dev"
 # ------------------------------------------------------------#
 #  Resources
 # ------------------------------------------------------------#
@@ -33,7 +37,10 @@ Resources:
     Type: "AWS::ApiGateway::RestApi"
     Properties:
       Name: !Ref Name
- 
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
   Resource:
     Type: "AWS::ApiGateway::Resource"
     Properties:
@@ -55,11 +62,11 @@ Resources:
     Properties:
       RestApiId: !Ref Api
       ResourceId: !Ref Resource
-      AuthorizationType: "None"
-      HttpMethod: "GET"
+      AuthorizationType: None
+      HttpMethod: ANY
       Integration:
         Type: "AWS_PROXY"
-        IntegrationHttpMethod: "Get"
+        IntegrationHttpMethod: POST
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${FunctionName}/invocations"
     DependsOn: LambdaPermission
  
@@ -72,7 +79,7 @@ Resources:
   Stage:
     Type: AWS::ApiGateway::Stage
     Properties:
-      StageName: dev
+      StageName: !Ref StageName
       Description: dev stage
       RestApiId: !Ref Api
       DeploymentId: !Ref Deployment
