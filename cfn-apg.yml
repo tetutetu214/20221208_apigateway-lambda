@@ -84,3 +84,20 @@ Resources:
       RestApiId: !Ref Api
       DeploymentId: !Ref Deployment
     DependsOn: Deployment
+
+# ------------------------------------------------------------#
+# Output Parameters
+#------------------------------------------------------------#          
+Outputs:
+  RestAPIEndpoint:
+    Value: !Sub 'https://${RestAPI}.execute-api.${AWS::Region}.${AWS::URLSuffix}/${StageName}/${FunctionName}'
+    Export:
+      Name: RestAPIEndpoint
+  OriginDomain:
+    Value: !Sub '${RestAPI}.execute-api.${AWS::Region}.${AWS::URLSuffix}'   
+    Export:
+      Name: OriginDomain
+  OriginPath:
+    Value: !Sub '/${StageName}/${FunctionName}'
+    Export:
+      Name: OriginPath

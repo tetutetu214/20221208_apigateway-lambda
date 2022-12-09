@@ -30,9 +30,11 @@ Resources:
       Type: "AWS::CloudFront::Distribution"
       Properties:
         DistributionConfig:
+          HttpVersion: http2
           PriceClass: PriceClass_All
-          Aliases:
-          - !Ref WebsiteDomainName
+
+      
+          
           Origins:
           - CustomOriginConfig:
               OriginProtocolPolicy: http-only
@@ -59,5 +61,4 @@ Resources:
             SslSupportMethod: sni-only
             MinimumProtocolVersion: TLSv1.1_2016
             AcmCertificateArn: !Sub "arn:aws:acm:us-east-1:${AWS::AccountId}:certificate/${CFSSLCertificateId}"
-          HttpVersion: http2
           Enabled: true
