@@ -89,12 +89,12 @@ Resources:
 # Output Parameters
 #------------------------------------------------------------#          
 Outputs:
-  RestAPIEndpoint:
-    Value: !Sub 'https://${RestAPI}.execute-api.${AWS::Region}.${AWS::URLSuffix}/${StageName}/${FunctionName}'
+  Endpoint:
+    Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.${AWS::URLSuffix}/${StageName}/${FunctionName}'
     Export:
-      Name: RestAPIEndpoint
+      Name: Endpoint
   OriginDomain:
-    Value: !Sub '${RestAPI}.execute-api.${AWS::Region}.${AWS::URLSuffix}'   
+    Value: !Sub '${Api}.execute-api.${AWS::Region}.${AWS::URLSuffix}'   
     Export:
       Name: OriginDomain
   OriginPath:
