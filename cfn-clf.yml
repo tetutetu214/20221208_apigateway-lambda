@@ -41,6 +41,6 @@ Resources:
 #------------------------------------------------------------#          
 Outputs:
   DomainName:
-    Value: !GetAtt DomainName
+    Value: !GetAtt Distribution.DomainName
     Export:
       Name: cln-domainname-inamura
