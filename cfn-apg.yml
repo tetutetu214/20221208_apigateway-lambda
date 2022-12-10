@@ -97,7 +97,7 @@ Outputs:
     Value: !Sub '${Api}.execute-api.${AWS::Region}.${AWS::URLSuffix}'   
     Export:
       Name: OriginDomain
-  OriginPath:
-    Value: !Sub '/${StageName}/${FunctionName}'
+  StageName:
+    Value: !Sub '${StageName}'
     Export:
-      Name: OriginPath
+      Name: StageName
