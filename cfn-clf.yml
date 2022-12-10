@@ -37,16 +37,15 @@ Resources:
             - HEAD
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
           Compress: true
-          TargetOriginId: !Ref Origins.Id
-          PathPattern: '*'
+          TargetOriginId: cfn-clf-inamura
           ViewerProtocolPolicy: https-only
         Enabled: true
         Origins:
-          Id: cfn-clf-inamura
-          DomainName: !ImportValue OriginDomain
-          CustomOriginConfig:
-            HTTPSPort: '443'
-            OriginProtocolPolicy: https-only
-          OriginPath: /dev/cfn-lmd-inamura
+          - Id: cfn-clf-inamura
+            DomainName: !ImportValue OriginDomain
+            CustomOriginConfig:
+              HTTPSPort: '443'
+              OriginProtocolPolicy: https-only
+            OriginPath: /dev/cfn-lmd-inamura
         PriceClass: PriceClass_All
     
