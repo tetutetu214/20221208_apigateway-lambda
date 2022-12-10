@@ -3,23 +3,6 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description:
   CloudFront Create
 # ------------------------------------------------------------#
-#  Metadata
-# ------------------------------------------------------------#
-Metadata:
-  "AWS::CloudFormation::Interface":
-    ParameterGroups:
-      - Label:
-          default: "Lambda Configuration"
-        Parameters:
-        - FunctionName
-# ------------------------------------------------------------#
-#  InputParameters
-# ------------------------------------------------------------#
-Parameters:
-  FunctionName:
-    Type: String
-    Default: "cfn-lmd-inamura"
-# ------------------------------------------------------------#
 #  Resources
 # ------------------------------------------------------------#
 Resources:
@@ -30,6 +13,7 @@ Resources:
     Type: AWS::CloudFront::Distribution
     Properties:
       DistributionConfig:
+        Comment: "Create CloudFront with CloudFormation"
         PriceClass: PrinceClass_All
         DefaultCacheBehavior:
           AllowedMethods:
@@ -37,15 +21,26 @@ Resources:
             - HEAD
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
           Compress: true
-          TargetOriginId: cfn-clf-inamura
+          TargetOriginId: !ImportValue cfn-lmd-inamura-name
           ViewerProtocolPolicy: https-only
         Enabled: true
+        HttpVersion: http2and3
         Origins:
-          - Id: cfn-clf-inamura
+          - Id: !ImportValue cfn-lmd-inamura-name
             DomainName: !ImportValue OriginDomain
             CustomOriginConfig:
               HTTPSPort: '443'
               OriginProtocolPolicy: https-only
-            OriginPath: /dev/cfn-lmd-inamura
+            OriginPath: !Sub
+              - /${StageName}/${FunctionName}
+              - StageName: {'Fn::ImportValue': StageName}
+                FunctionName: {'Fn::ImportValue': cfn-lmd-inamura-name}
         PriceClass: PriceClass_All
-    
+# ------------------------------------------------------------#
+# Output Parameters
+#------------------------------------------------------------#          
+Outputs:
+  DomainName:
+    Value: !GetAtt DomainName
+    Export:
+      Name: cln-domainname-inamura
